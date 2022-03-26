@@ -44,10 +44,10 @@ One of your custom classes must contain at least 2 overloaded constructor method
 
 ### Interactive
 
-Users must be able to interact with your game in some way and have the game visualization react meaningfully. Common interactions include clicking, hovering the mouse over a part of the visualization, or typing on the keyboard.
+Users must be able to interact with your game in some way and have the game visualization react meaningfully. Common interactions include clicking, hovering the mouse over a part of the visualization, or typing on the keyboard. Some helpful tips:
 
-- When a user presses a key, Processing will automatically call any method named `keyPressed()`. The `key` instance property will automatically be assigned the key that was pressed, as as `char` value.
-- When a user moves, clicks, or drags the mouse, Processing will automatically call any method named `mouseMoved()`, `mouseClicked()`, or `mouseDragged()`, respectively. The `mouseX` and `mouseY` instance properties will automatically hold the position of the mouse, measured from the top-left origin of the window.
+- When a user presses a key, Processing's code will automatically call any method named `keyPressed()`. The `key` instance property will automatically be assigned the key that was pressed, as as `char` value.
+- When a user moves, clicks, or drags the mouse, Processing's code will automatically call any method named `mouseMoved()`, `mouseClicked()`, or `mouseDragged()`, respectively. The `mouseX` and `mouseY` instance properties will automatically hold the position of the mouse, measured from the top-left origin of the window.
 
 ## Example
 
@@ -141,6 +141,36 @@ for (int i=0; i<asteroids.size(); i++) {
 ### Extra credit
 
 Have one of your custom classes inherit from another custom class. This inheritance should be used meaningfully such that the object that inherits makes use or overrides the inherited methods or properties in a useful way.
+
+## Technical requirements
+
+This project depends upon the [Processing](http://processing.org/) library. The `.jar` files for this dependency are included within the `lib` directory.
+
+However, Processing currently works only with Java 8. In order to have the Java Extensions for Visual Studio Code run the program with Java 8, instead of any newer version, you must do the following:
+
+1. Download and install the [jdk8u242-b08 version of OpenJDK 8](https://github.com/AdoptOpenJDK/openjdk8-binaries/releases/tag/jdk8u242-b08) - on MacOS, select the appropriate `.pkg` file; for Windows, select the appropriate `.msi` file (be sure to select the file with `jdk` in its name, not the one with `jre` in its name).
+1. Note the file path to the directory where this new JDK was installed. On Mac, it is probably in `"/Library/Java/JavaVirtualMachines/adoptopenjdk-8.jdk/Contents/Home"`. On Windows, it will be in a different directory, probably `C:\Program Files (x86)\AdoptOpenJDK\jdk-8.0.242.08-hotspot`, which would have to have its back slashes escaped to be `"C:\\Program Files (x86)\\AdoptOpenJDK\\jdk-8.0.242.08-hotspot"` in the settings file. We'll refer to this directory later as `THE_PATH_TO_JDK_8`.
+1. In Visual Studio Code, go to Settings (MacOS: `Code`->`Preferences`->`Settings`; Windows: `File`->`Preferences`->`Settings`), and enter "`java jdt ls java home` in the search field. You should see an option with a link to `Edit in settings.json` - click that link to open that file in the editor.
+1. In the `settings.json`, edit the "`java.configuration.runtimes`" setting so that it includes the new JDK. If an existing JDK is listed there, you an keep both. For example (replace `THE_PATH_TO_JDK_8` with the correct path for your newly-installed JDK) :
+   ```javascript
+   "java.configuration.runtimes": [
+       {
+       "name": "JavaSE-1.8",
+       "path": "THE_PATH_TO_JDK_8",
+       "default": true
+       },
+       {
+       "name": "JavaSE-15",
+       "path": "THE_PATH_TO_AN_EXISTING_JDK",
+       "default": false
+       }
+   ],
+   ```
+1. With this project open, go to Visual Studio Code's Command Palette (`View`->`Command Palette`) and search for "`Java: Configure Java Runtime`". Click on the matching option that appears.
+1. In the `Configure Java Runtime` setting document, click the icon to edit the current runtime setting for this project and change it to the newly-installed JDK.
+1. In the Command Palette again (`View`->`Command Palette`), search for "`Java: Clean Language Server Workspace`". Click the matching option that appears and confirm that you would like to reset the Java language server.
+
+At this point, the project should run properly. Try it out.
 
 ## Folder structure
 
