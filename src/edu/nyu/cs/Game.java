@@ -1,6 +1,6 @@
 package edu.nyu.cs;
 
-public class App {
+public class Game {
 
   /**
    * The main function is automatically called first in a Java program.

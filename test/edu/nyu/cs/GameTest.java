@@ -8,7 +8,7 @@ import static org.junit.Assert.*;
 import org.junit.contrib.java.lang.system.SystemOutRule; // system rules lib - useful for capturing system output
 // import static org.mockito.Mockito.*; // for mocking, stubbing, and spying
 
-public class AppTest {
+public class GameTest {
 
     @Rule
     public final SystemOutRule systemOutRule = new SystemOutRule();
@@ -18,7 +18,7 @@ public class AppTest {
         systemOutRule.enableLog(); // start capturing System.out
         String[] args = {};
         try {
-            App.main(args);
+            Game.main(args);
             String actual = systemOutRule.getLogWithNormalizedLineSeparator();
             String expected = "Hello world!\n";
             assertEquals(expected, actual);
