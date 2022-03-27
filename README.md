@@ -1,14 +1,18 @@
 # Game Development
 
-Develop a game using object-oriented programming in Java and the Processing framework.
+Develop a game using object-oriented programming in Java and the [Processing](https://processing.org) framework.
 
-The goal of this assignment is to give you hands-on experience writing object-oriented code in Java.
+The goal of this assignment is to give you hands-on experience writing well-written object-oriented code in Java.
 
 ## Authors
 
 This game was created by:
 
 - `Your Name Here` (`Your GitHub ID Here as a link to your GitHub profile page`)
+
+## Starter code
+
+Some starter code has been included in order to show some basic concepts of working with well-structured object-oriented code using the Processing framework. You should delete or modify this code as necessary to complete your own game.
 
 ## Requirements
 
