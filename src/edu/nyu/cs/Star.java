@@ -49,4 +49,22 @@ public class Star {
         this.x += dx;
         this.y += dy;
     }
+
+    /**
+     * Determines whehter a given x, y coordinate overlaps with this Star.
+     * @param x The x coordinate of interest.
+     * @param y The y coordinate of interest.
+     * @param fudgeFactor An amount by which to expand the area we consider overlap
+     * @return Boolean true if the x,y coordinate overlaps with this star, false otherwise.
+     */
+    public boolean overlaps(int x, int y, int fudgeFactor) {
+        // get the coordinates of all edges of this Star's image
+        int l = this.x - this.img.width/2 - fudgeFactor; // the left edge's x coord
+        int r = this.x + this.img.width/2 + fudgeFactor; // the right edge's x coord
+        int t = this.y - this.img.height/2 - fudgeFactor; // the top edge's y coord
+        int b = this.y + this.img.height/2 + fudgeFactor; // the bottom edge's y coord
+        // return whether the x,y coords are within the bounds of this Star's image
+        return (x > l && x < r && y > t && y < b);
+    }
+
 }

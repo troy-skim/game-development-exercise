@@ -21,11 +21,18 @@ public class Game extends PApplet {
   private PImage imgMe; // will hold a photo of me
   private ArrayList<Star> stars; // will hold an ArrayList of Star objects
   private final int NUM_STARS = 20; // the number of stars to create
+  private final int POINTS_PER_STAR = 1; // the number of points to award the user for each star they destroy
+  private int score = 0; // the user's score
+
+
 	/**
 	 * This method will be automatically called by Processing when the program runs.
    * - Use it to set up the initial state of any instance properties you may use in the draw method.
 	 */
 	public void setup() {
+    // set the cursor to crosshairs
+    this.cursor(PApplet.CROSS);
+
     // load up a sound file and play it once when program starts up
     this.soundStartup = new SoundFile(this, "sounds/vibraphon.mp3"); // if you're on Windows, you may have to change this to "sounds\\vibraphon.mp3"
     this.soundStartup.play();
@@ -46,7 +53,7 @@ public class Game extends PApplet {
       // create a star and add it to the array list
       // Windows users may have to change the file path to be "images\\star.png"
       Star star = new Star(this, "images/star.png", this.width/2, this.height/2);
-      stars.add(star);
+      this.stars.add(star);
     }
 	}
 
@@ -60,18 +67,22 @@ public class Game extends PApplet {
     this.background(0, 0, 0); // fill the background with the specified r, g, b color.
 
     // show an image of me that wanders around the window
-    image(imgMe, this.width / 2, this.height/2); // draw image to center of window
+    image(this.imgMe, this.width / 2, this.height/2); // draw image to center of window
 
     // draw an ellipse at the current position of the mouse
     this.fill(255, 255, 255); // set the r, g, b color to use for filling in any shapes we draw later.
-    this.ellipse(mouseX, mouseY, 100, 100); // draw an ellipse wherever the mouse is
+    this.ellipse(this.mouseX, this.mouseY, 60, 60); // draw an ellipse wherever the mouse is
 
     // draw all stars to their current position
-    for (int i=0; i<stars.size(); i++) {
-      Star star = stars.get(i); // get the current Star object from the ArrayList
+    for (int i=0; i<this.stars.size(); i++) {
+      Star star = this.stars.get(i); // get the current Star object from the ArrayList
       star.moveRandomly(); // move the star by a random amount
       star.draw(); // draw the star to the screen
     }
+
+    // show the score at the bottom of the window
+    String scoreString = String.format("SCORE: %d", this.score);
+    text(scoreString, this.width/2, this.height-50);
 
 	}
 
@@ -82,7 +93,7 @@ public class Game extends PApplet {
 	 */
 	public void keyPressed() {
     // the `key` variable holds the char of the key that was pressed, the `keyCode` variable holds the ASCII/Unicode numeric code for that key.
-		System.out.println(String.format("Key pressed: %s, key code: %d.", key, keyCode));
+		System.out.println(String.format("Key pressed: %s, key code: %d.", this.key, this.keyCode));
 	}  
 
 	/**
@@ -91,8 +102,21 @@ public class Game extends PApplet {
    * - The `mouseButton` variable is automatically assigned the value of either the PApplet.LEFT or PApplet.RIGHT constants, depending upon which button was pressed.
    */
 	public void mouseClicked() {
-		System.out.println(String.format("Mouse clicked at: %d:%d.", mouseX, mouseY));
-    this.soundClick.play();
+		System.out.println(String.format("Mouse clicked at: %d:%d.", this.mouseX, this.mouseY));
+
+    // check whether we have clicked on a star
+    for (int i=0; i<this.stars.size(); i++) {
+      Star star = this.stars.get(i); // get the current Star object from the ArrayList
+      // check whether the position where the user clicked was within this star's boundaries
+      if (star.overlaps(this.mouseX, this.mouseY, 10)) {
+        // if so, award the user some points
+        score += POINTS_PER_STAR;        
+        // play a thump sound
+        this.soundClick.play();
+        // delete the star from the ArrayList
+        this.stars.remove(star);
+      }
+    }
 	}
 
 	/**
