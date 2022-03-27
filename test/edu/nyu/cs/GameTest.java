@@ -21,7 +21,7 @@ public class GameTest {
             Game.main(args);
             String actual = systemOutRule.getLogWithNormalizedLineSeparator();
             String expected = "Hello world!\n";
-            assertEquals(expected, actual);
+            assertEquals("Your game must meet all the requirements.", "We have not provided tests to check your work for you.  Verify and validate your work yourself.");
         }
         catch (Exception e) {
             assert false; // fail the test if any exception occurs
