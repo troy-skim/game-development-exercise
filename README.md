@@ -14,6 +14,8 @@ This game was created by:
 
 Some starter code has been included in order to show some basic concepts of working with well-structured object-oriented code using the Processing framework. You should delete or modify this code as necessary to complete your own game.
 
+_Your game should be nothing like the starter code example game_.
+
 ## Requirements
 
 ### Collaboration
