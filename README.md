@@ -55,7 +55,7 @@ Imagine you are recreating the classic arcade game, [Asteroids](<https://en.wiki
 
 The following is an example only. You are hereby **forbidden** from making the game asteroids for your own assignment. Pick a game of _your_ choosing.
 
-- You would create a class called something like `PlayAsteroids`, where you include the main logic of the game and where you instantiate all the other objects needed to play the game.
+- You would create a class called something like `Game`, where you include the main logic of the game and where you instantiate all the other objects needed to play the game.
 
   - this class would inherit from `PApplet`, a class provided in the Processing framework's `core.jar` file
   - this class would override PApplet's `settings()`, `setup()`, and `draw()` methods
