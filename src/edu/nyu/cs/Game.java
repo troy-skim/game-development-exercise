@@ -1,5 +1,6 @@
 package edu.nyu.cs;
 
+import java.nio.file.Paths;
 import java.util.ArrayList;
 
 import org.apache.commons.lang3.SystemUtils;
@@ -34,14 +35,18 @@ public class Game extends PApplet {
     this.cursor(PApplet.CROSS);
 
     // load up a sound file and play it once when program starts up
-    this.soundStartup = new SoundFile(this, "sounds/vibraphon.mp3"); // if you're on Windows, you may have to change this to "sounds\\vibraphon.mp3"
+		String cwd = Paths.get("").toAbsolutePath().toString(); // the current working directory as an absolute path
+		String path = Paths.get(cwd, "sounds", "vibraphon.mp3").toString(); // e.g "sounds/vibraphon.mp3" on Mac/Unix vs. "sounds\vibraphon.mp3" on Windows
+    this.soundStartup = new SoundFile(this, path);
     this.soundStartup.play();
 
     // load up a sound file and play it once when the user clicks
-    this.soundClick = new SoundFile(this, "sounds/thump.aiff"); // if you're on Windows, you may have to change this to "sounds\\thump.aiff"
+		path = Paths.get(cwd, "sounds", "thump.aiff").toString(); // e.g "sounds/thump.aiff" on Mac/Unix vs. "sounds\thump.aiff" on Windows
+    this.soundClick = new SoundFile(this, path); // if you're on Windows, you may have to change this to "sounds\\thump.aiff"
  
     // load up an image of me
-    this.imgMe = loadImage("images/me.png"); // if you're on Windows, you may have to change this to "images\\me.png"
+		path = Paths.get(cwd, "images", "me.png").toString(); // e.g "images/me.png" on Mac/Unix vs. "images\me.png" on Windows
+    this.imgMe = loadImage(path);
 
     // some basic settings for when we draw shapes
     this.ellipseMode(PApplet.CENTER); // setting so ellipses radiate away from the x and y coordinates we specify.
@@ -51,8 +56,8 @@ public class Game extends PApplet {
     stars = new ArrayList<Star>();
     for (int i=0; i<this.NUM_STARS; i++) {
       // create a star and add it to the array list
-      // Windows users may have to change the file path to be "images\\star.png"
-      Star star = new Star(this, "images/star.png", this.width/2, this.height/2);
+  		path = Paths.get(cwd, "images", "star.png").toString(); // e.g "images/star.png" on Mac/Unix vs. "images\star.png" on Windows
+      Star star = new Star(this, path, this.width/2, this.height/2);
       this.stars.add(star);
     }
 	}
