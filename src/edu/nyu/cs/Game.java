@@ -9,21 +9,30 @@ import processing.core.*; // import the base Processing library
 import processing.sound.*; // import the processing sound library
 
 /**
- * Describe your game succinctly here, and update the author info below.
- * Some starter code has been included for your reference - feel free to delete or modify it.
+ * This is a single-player pong game. The player plays against the wall, from the left side.
+ * When the ball hits the side, it bounces normally.
+ * However, when the ball hits the opposite side or the paddle, it bounces randomly. 
+ * The ball also gets faster as time passes, making it harder to catch. 
+ * The game counts the number of seconds the player survived, and records the maximum. 
+ * If the maximum record hits 10 and 20, there will be special changes. 
  * 
- * @author Foo Barstein
+ * @author Troy Kim
  * @version 0.1
  */
 public class Game extends PApplet {
 
   private SoundFile soundStartup; // will refer to a sound file to play when the program first starts
-  private SoundFile soundClick; // will refer to a sound file to play when the user clicks the mouse
-  private PImage imgMe; // will hold a photo of me
-  private ArrayList<Star> stars; // will hold an ArrayList of Star objects
-  private final int NUM_STARS = 20; // the number of stars to create
-  private final int POINTS_PER_STAR = 1; // the number of points to award the user for each star they destroy
-  private int score = 0; // the user's score
+  private PImage imgMe; // will hold a photo of the background
+  private ArrayList<Ball> balls; // will hold an ArrayList of ball objects
+  private int score = 0; // the user's highest score
+  private int previousScore = 0; // the user's previous score
+  private int dy = 5; // the ball's initial y axis velocity
+  private int dx = 5; // the ball's initial x axis velocity
+  private int absDx = 5; // to make the ball go faster and faster
+  private int absCount = 0; // also to make the ball go faster and faster
+  private boolean start = true; // to count seconds
+  private long startTime = 0; // to count seconds
+  private long endTime = 0; // to count seconds
 
 
 	/**
@@ -40,26 +49,20 @@ public class Game extends PApplet {
     this.soundStartup = new SoundFile(this, path);
     this.soundStartup.play();
 
-    // load up a sound file and play it once when the user clicks
-		path = Paths.get(cwd, "sounds", "thump.aiff").toString(); // e.g "sounds/thump.aiff" on Mac/Unix vs. "sounds\thump.aiff" on Windows
-    this.soundClick = new SoundFile(this, path); // if you're on Windows, you may have to change this to "sounds\\thump.aiff"
- 
-    // load up an image of me
-		path = Paths.get(cwd, "images", "me.png").toString(); // e.g "images/me.png" on Mac/Unix vs. "images\me.png" on Windows
+    // load up an image of the background
+		path = Paths.get(cwd, "images", "pongbackground.png").toString(); // e.g "images/me.png" on Mac/Unix vs. "images\me.png" on Windows
     this.imgMe = loadImage(path);
 
     // some basic settings for when we draw shapes
     this.ellipseMode(PApplet.CENTER); // setting so ellipses radiate away from the x and y coordinates we specify.
+    this.rectMode(PApplet.CENTER);
     this.imageMode(PApplet.CENTER); // setting so the ellipse radiates away from the x and y coordinates we specify.
 
-    // create some stars, starting life at the center of the window
-    stars = new ArrayList<Star>();
-    for (int i=0; i<this.NUM_STARS; i++) {
-      // create a star and add it to the array list
-  		path = Paths.get(cwd, "images", "star.png").toString(); // e.g "images/star.png" on Mac/Unix vs. "images\star.png" on Windows
-      Star star = new Star(this, path, this.width/2, this.height/2);
-      this.stars.add(star);
-    }
+    // create the ball, starting life at the center of the window
+    balls = new ArrayList<Ball>();
+  	path = Paths.get(cwd, "images", "ball.png").toString();
+    Ball ball = new Ball(this, path, this.width/2, this.height/2);
+    this.balls.add(ball);
 	}
 
 	/**
@@ -76,18 +79,71 @@ public class Game extends PApplet {
 
     // draw an ellipse at the current position of the mouse
     this.fill(255, 255, 255); // set the r, g, b color to use for filling in any shapes we draw later.
-    this.ellipse(this.mouseX, this.mouseY, 60, 60); // draw an ellipse wherever the mouse is
+    this.rect(0, this.mouseY, 8, 160); // draw an rectangle wherever the mouse is
 
-    // draw all stars to their current position
+    // draw all balls to their current position
+    if (dx>0) {
+      dx = absDx;
+    }
+    else {
+      dx = -absDx;
+    }
+    Ball ball = this.balls.get(0);
+    if (start) {
+      start = false;
+      startTime = System.nanoTime();
+    }
+    int[] temp = ball.moveRandomly(dy, dx);
+    dx = temp[0];
+    dy = temp[1];
+    ball.draw();
+    absCount += 1;
+    absDx = (int) (absCount/100) +5;
+    if (dx==0) {
+      endTime = System.nanoTime();
+      previousScore = (int) ((endTime-startTime)/1000000000);
+      score = max(previousScore, score);
+      start = true;
+      this.balls.remove(0);
+      String cwd = Paths.get("").toAbsolutePath().toString();
+      String path = "";
+      if (score>=10) {
+        path = Paths.get(cwd, "images", "cat.png").toString();
+      }
+      else if (score>=20) {
+        path = Paths.get(cwd, "images", "tiger.png").toString();
+      }
+      else {
+        path = Paths.get(cwd, "images", "ball.png").toString();
+      }
+      ball = new Ball(this, path, this.width/2, this.height/2);
+      this.balls.add(ball);
+      absCount = 0;
+      int randNum = (int) (Math.random()*2);
+      if (randNum==0) {
+        dx = 5;
+      }
+      else {
+        dx = -5;
+      }
+      try {
+        Thread.sleep(500);
+      } 
+      catch (InterruptedException e) {
+        Thread.currentThread().interrupt();
+      }
+    }
+    /**
     for (int i=0; i<this.stars.size(); i++) {
       Star star = this.stars.get(i); // get the current Star object from the ArrayList
       star.moveRandomly(); // move the star by a random amount
       star.draw(); // draw the star to the screen
     }
+    */
 
     // show the score at the bottom of the window
-    String scoreString = String.format("SCORE: %d", this.score);
-    text(scoreString, this.width/2, this.height-50);
+    String scoreString = String.format("HIGHEST RECORD (IN SECONDS): %d PREVIOUS RECORD (IN SECONDS): %d", this.score, this.previousScore);
+    text(scoreString, this.width/2+50, this.height-50);
 
 	}
 
@@ -108,20 +164,6 @@ public class Game extends PApplet {
    */
 	public void mouseClicked() {
 		System.out.println(String.format("Mouse clicked at: %d:%d.", this.mouseX, this.mouseY));
-
-    // check whether we have clicked on a star
-    for (int i=0; i<this.stars.size(); i++) {
-      Star star = this.stars.get(i); // get the current Star object from the ArrayList
-      // check whether the position where the user clicked was within this star's boundaries
-      if (star.overlaps(this.mouseX, this.mouseY, 10)) {
-        // if so, award the user some points
-        score += POINTS_PER_STAR;        
-        // play a thump sound
-        this.soundClick.play();
-        // delete the star from the ArrayList
-        this.stars.remove(star);
-      }
-    }
 	}
 
 	/**
