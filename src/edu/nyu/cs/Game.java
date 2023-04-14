@@ -107,7 +107,7 @@ public class Game extends PApplet {
       this.balls.remove(0);
       String cwd = Paths.get("").toAbsolutePath().toString();
       String path = "";
-      if (score>=10) {
+      if (score>=10&&score<20) {
         path = Paths.get(cwd, "images", "cat.png").toString();
       }
       else if (score>=20) {
