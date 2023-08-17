@@ -36,28 +36,26 @@ public class Game extends PApplet {
 
 
 	/**
-	 * This method will be automatically called by Processing when the program runs.
-   * - Use it to set up the initial state of any instance properties you may use in the draw method.
+	 * called when the program runs
 	 */
 	public void setup() {
-    // set the cursor to crosshairs
     this.cursor(PApplet.CROSS);
 
     // load up a sound file and play it once when program starts up
-		String cwd = Paths.get("").toAbsolutePath().toString(); // the current working directory as an absolute path
-		String path = Paths.get(cwd, "sounds", "vibraphon.mp3").toString(); // e.g "sounds/vibraphon.mp3" on Mac/Unix vs. "sounds\vibraphon.mp3" on Windows
+		String cwd = Paths.get("").toAbsolutePath().toString(); 
+		String path = Paths.get(cwd, "sounds", "vibraphon.mp3").toString(); 
     this.soundStartup = new SoundFile(this, path);
     this.soundStartup.play();
 
     // load up an image of the background
-		path = Paths.get(cwd, "images", "pongbackground.png").toString(); // e.g "images/me.png" on Mac/Unix vs. "images\me.png" on Windows
+		path = Paths.get(cwd, "images", "pongbackground.png").toString(); 
     this.imgMe = loadImage(path);
 
-    // some basic settings for when we draw shapes
-    this.ellipseMode(PApplet.CENTER); // setting so ellipses radiate away from the x and y coordinates we specify.
+    // some basic settings for drawing shapes
+    this.ellipseMode(PApplet.CENTER); 
     this.rectMode(PApplet.CENTER);
-    this.imageMode(PApplet.CENTER); // setting so the ellipse radiates away from the x and y coordinates we specify.
-
+    this.imageMode(PApplet.CENTER); 
+    
     // create the ball, starting life at the center of the window
     balls = new ArrayList<Ball>();
   	path = Paths.get(cwd, "images", "ball.png").toString();
@@ -67,12 +65,10 @@ public class Game extends PApplet {
 
 	/**
 	 * This method is called automatically by Processing every 1/60th of a second by default.
-   * - Use it to modify what is drawn to the screen.
-   * - There are methods for drawing various shapes, including `ellipse()`, `circle()`, `rect()`, `square()`, `triangle()`, `line()`, `point()`, etc.
 	 */
 	public void draw() {
     // fill the window with solid color
-    this.background(0, 0, 0); // fill the background with the specified r, g, b color.
+    this.background(0, 0, 0); // fill the background with black.
 
     // show an image of me that wanders around the window
     image(this.imgMe, this.width / 2, this.height/2); // draw image to center of window
@@ -107,12 +103,15 @@ public class Game extends PApplet {
       this.balls.remove(0);
       String cwd = Paths.get("").toAbsolutePath().toString();
       String path = "";
-      if (score>=10&&score<20) {
+      // change ball to cat
+      if (score>=10&&score<15) {
         path = Paths.get(cwd, "images", "cat.png").toString();
       }
-      else if (score>=20) {
+      // change ball to tiger
+      else if (score>=15) {
         path = Paths.get(cwd, "images", "tiger.png").toString();
       }
+      // default setting: set ball to ball
       else {
         path = Paths.get(cwd, "images", "ball.png").toString();
       }
@@ -133,13 +132,6 @@ public class Game extends PApplet {
         Thread.currentThread().interrupt();
       }
     }
-    /**
-    for (int i=0; i<this.stars.size(); i++) {
-      Star star = this.stars.get(i); // get the current Star object from the ArrayList
-      star.moveRandomly(); // move the star by a random amount
-      star.draw(); // draw the star to the screen
-    }
-    */
 
     // show the score at the bottom of the window
     String scoreString = String.format("HIGHEST RECORD (IN SECONDS): %d PREVIOUS RECORD (IN SECONDS): %d", this.score, this.previousScore);
@@ -148,36 +140,31 @@ public class Game extends PApplet {
 	}
 
 	/**
-	 * This method is automatically called by Processing every time the user presses a key while viewing the map.
-	 * - The `key` variable (type char) is automatically is assigned the value of the key that was pressed.
-	 * - The `keyCode` variable (type int) is automatically is assigned the numeric ASCII/Unicode code of the key that was pressed.
+	 * called when user presses key
+   * prints out the pressed key
 	 */
 	public void keyPressed() {
-    // the `key` variable holds the char of the key that was pressed, the `keyCode` variable holds the ASCII/Unicode numeric code for that key.
+    // the `key` variable holds the char of the key that was pressed, the `keyCode` variable holds the ASCII/Unicode numeric code (int) for that key
 		System.out.println(String.format("Key pressed: %s, key code: %d.", this.key, this.keyCode));
 	}  
 
 	/**
-	 * This method is automatically called by Processing every time the user clicks a mouse button.
-	 * - The `mouseX` and `mouseY` variables are automatically is assigned the coordinates on the screen when the mouse was clicked.
-   * - The `mouseButton` variable is automatically assigned the value of either the PApplet.LEFT or PApplet.RIGHT constants, depending upon which button was pressed.
+	 * called when mouse is clicked, and prints out the mouse location
    */
 	public void mouseClicked() {
 		System.out.println(String.format("Mouse clicked at: %d:%d.", this.mouseX, this.mouseY));
 	}
 
 	/**
-	 * This method is automatically called by Processing every time the user presses down and drags the mouse.
-	 * The `mouseX` and `mouseY` variables are automatically is assigned the coordinates on the screen when the mouse was clicked.
+	 * prints out the mouse location
+   * called when the mouse is moved
    */
 	public void mouseDragged() {
 		System.out.println(String.format("Mouse dragging at: %d:%d.", mouseX, mouseY));
 	}
 
   /**
-   * A method that can be used to modify settings of the window, such as set its size.
-   * This method shouldn't really be used for anything else.  
-   * Use the setup() method for most other tasks to perform when the program first runs.
+   * modify size of the window
    */
   public void settings() {
 		size(1200, 800); // set the map window size, using the OpenGL 2D rendering engine
@@ -185,10 +172,7 @@ public class Game extends PApplet {
   }
 
   /**
-   * The main function is automatically called first in a Java program.
-   * When using the Processing library, this method must call PApplet's main method and pass it the full class name, including package.
-   * You shouldn't need to modify this method.
-   * 
+   * The main function
    * @param args An array of any command-line arguments.
    */
   public static void main(String[] args) {
